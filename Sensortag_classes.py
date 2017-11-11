@@ -18,8 +18,8 @@ class SensorTag:
         print "INFO: Preparing to connect. Hold on a second...If nothing happens please press the power button..."
         self.con.sendline('connect')
         # test for success of connect
-	self.con.expect('.*Connection successful.*\[LE\]>')
-	print "INFO: Connection Successful!"
+        self.con.expect('.*Connection successful.*\[LE\]>')
+        print "INFO: Connection Successful!"
         # Earlier versions of gatttool returned a different message.  Use this pattern -
         #self.con.expect('\[CON\].*>')
         self.cb = {}
@@ -42,9 +42,9 @@ class SensorTag:
         #print 'DEBUGGING: char-read-hnd 0x%02x' % handle        
         self.con.expect('.*descriptor:.* \r')
         reading = self.con.after
-        print "DEBUGGING: Reading from Tag... %s \n" % reading #print the outcome as it comes while reading the Tag
+        #print "DEBUGGING: Reading from Tag... %s \n" % reading #print the outcome as it comes while reading the Tag
         rval = reading.split() #splitting the reading based on the spaces
-        print "DEBUGGING: rval" + str(rval)
+        #print "DEBUGGING: rval" + str(rval)
         
         if  sensortype in ['temperature']:
 			raw_measurement = rval[-4]+rval[-3]+rval[-2]+rval[-1]
@@ -57,7 +57,7 @@ class SensorTag:
         else:
 			raw_measurement = 0
 			
-        print raw_measurement
+        #print raw_measurement
         return raw_measurement
                     
 

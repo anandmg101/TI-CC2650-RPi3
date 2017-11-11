@@ -83,6 +83,7 @@ def hexLum2Lux(raw_luminance):
 def hexHum2RelHum(raw_humidity):
 
     humidity = float((int(raw_humidity,16)))/65536*100 #get the int value from hex and divide as per Dataset.    
+    print "INFO: Humidity:    %f" % humidity
     return humidity
     
     
@@ -146,14 +147,14 @@ def main():
     print "INFO: [re]starting.."
 
     tag  = SensorTag(bluetooth_adr) #pass the Bluetooth Address
-    tag.char_write_cmd(0x24,01) #Enable temperature sensor
+    tag.char_write_cmd(0x27,01) #Enable temperature sensor
     
     
     
     count = 0
     while count < reading_iterations:
 	        """GETTING THE IR AND AMBIENT TEMPERATURE"""
-		IR_temp_celsius, Ambient_temp_celsius = hexTemp2C(tag.char_read_hnd(0x21, "temperature")) #get the hex value and parse it to get Celcius
+		IR_temp_celsius, Ambient_temp_celsius = hexTemp2C(tag.char_read_hnd(0x24, "temperature")) #get the hex value and parse it to get Celcius
 		if flag_to_send == True:	
 			print "INFO: Sending to Database..." 
 			send_to_DB(IR_temp_celsius, "IR") 			# Send to database the IR temperature
@@ -162,7 +163,7 @@ def main():
 		count =count +1
 		
     """GETTING THE LUMINANCE"""
-
+    """
     #tag2 = SensorTag(bluetooth_adr)
     tag.char_write_cmd(0x44,01)
     temp_lum = tag.char_read_hnd(0x41, "luminance")
@@ -171,21 +172,22 @@ def main():
     if flag_to_send == True:	
 	print "INFO: Sending to Database..." 
 	send_to_DB(lux_luminance, "luminance") # Send to database the Ambient temperature	
-  
+    """
       
     """GETTING THE HUMIDITY"""
-    tag.char_write_cmd(0x2C,01)
-    rel_humidity = hexHum2RelHum(tag.char_read_hnd(0x29, "humidity"))
+    tag.char_write_cmd(0x2F,01)
+    rel_humidity = hexHum2RelHum(tag.char_read_hnd(0x2C, "humidity"))
+    
     if flag_to_send == True:	
 	print "INFO: Sending to Database..."
 	send_to_DB(rel_humidity, "humidity") # Send to database the Relative Humidity	
 	
-    """GETTING THE Barometric Pressure"""
+    """GETTING THE Barometric Pressure
     tag.char_write_cmd(0x34,01)
     barPressure = hexPress2Press(tag.char_read_hnd(0x31, "barPressure"))
     if flag_to_send == True:	
 	print "INFO: Sending to Database..."
-	send_to_DB(rel_humidity, "barPressure") # Send to database the Barrometric Pressure in hPa (hectoPascal)	
+	send_to_DB(rel_humidity, "barPressure") # Send to database the Barrometric Pressure in hPa (hectoPascal)"""	
     
     
     #tag.notification_loop()
